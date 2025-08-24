@@ -280,7 +280,11 @@ func (r *standardRenderer) flush() {
 		buf.WriteString(ansi.CursorBackward(r.width))
 	}
 
+	// @BW: Changed to enable synchronized output.
+	_, _ = r.out.Write([]byte(ansi.SetSynchronizedOutputMode))
 	_, _ = r.out.Write(buf.Bytes())
+	_, _ = r.out.Write([]byte(ansi.ResetSynchronizedOutputMode))
+
 	r.lastRender = r.buf.String()
 
 	// Save previously rendered lines for comparison in the next render. If we
